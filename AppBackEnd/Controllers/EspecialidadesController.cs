@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using AppBackEnd.Data;
 using AppBackEnd.Models;
+using AppBackEnd.Services;
 
 namespace AppBackEnd.Controllers
 {
@@ -8,9 +9,9 @@ namespace AppBackEnd.Controllers
     [Route("api/[controller]")]
     public class EspecialidadesController : ControllerBase
     {
-        private readonly InMemoryDataService _dataService;
+        private readonly IDataService _dataService;
 
-        public EspecialidadesController(InMemoryDataService dataService)
+        public EspecialidadesController(IDataService dataService)
         {
             _dataService = dataService;
         }
@@ -20,9 +21,9 @@ namespace AppBackEnd.Controllers
         /// </summary>
         /// <returns>Lista de especialidades</returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Especialidade>> GetEspecialidades()
+        public async Task<ActionResult<IEnumerable<Especialidade>>> GetEspecialidades()
         {
-            var especialidades = _dataService.GetEspecialidades();
+            var especialidades = await _dataService.GetEspecialidadesAsync();
             return Ok(especialidades);
         }
 
@@ -32,9 +33,9 @@ namespace AppBackEnd.Controllers
         /// <param name="id">ID da especialidade</param>
         /// <returns>Especialidade encontrada</returns>
         [HttpGet("{id}")]
-        public ActionResult<Especialidade> GetEspecialidade(int id)
+        public async Task<ActionResult<Especialidade>> GetEspecialidade(int id)
         {
-            var especialidade = _dataService.GetEspecialidadeById(id);
+            var especialidade = await _dataService.GetEspecialidadeByIdAsync(id);
             
             if (especialidade == null)
             {

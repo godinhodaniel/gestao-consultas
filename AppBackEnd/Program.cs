@@ -43,8 +43,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// In-Memory Data (temporário até implementar banco de dados)
-builder.Services.AddSingleton<InMemoryDataService>();
+// Temporariamente usando InMemoryDataService para desenvolvimento
+// TODO: Reconectar com Supabase após commit
+builder.Services.AddScoped<InMemoryDataService>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -73,6 +74,7 @@ builder.Services.AddAuthentication(x =>
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDataService, InMemoryDataService>();
 
 var app = builder.Build();
 

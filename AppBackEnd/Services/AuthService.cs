@@ -11,10 +11,10 @@ namespace AppBackEnd.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly InMemoryDataService _dataService;
+        private readonly IDataService _dataService;
         private readonly IConfiguration _configuration;
 
-        public AuthService(InMemoryDataService dataService, IConfiguration configuration)
+        public AuthService(IDataService dataService, IConfiguration configuration)
         {
             _dataService = dataService;
             _configuration = configuration;
@@ -22,7 +22,7 @@ namespace AppBackEnd.Services
 
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
         {
-            var usuario = _dataService.GetUsuarioByEmail(loginDto.Email);
+            var usuario = await _dataService.GetUsuarioByEmailAsync(loginDto.Email);
 
             if (usuario == null || !VerifyPassword(loginDto.Senha, usuario.Senha))
             {
@@ -45,7 +45,7 @@ namespace AppBackEnd.Services
 
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
         {
-            var existingUser = _dataService.GetUsuarioByEmail(registerDto.Email);
+            var existingUser = await _dataService.GetUsuarioByEmailAsync(registerDto.Email);
 
             if (existingUser != null)
             {
@@ -63,7 +63,7 @@ namespace AppBackEnd.Services
                 Ativo = true
             };
 
-            _dataService.AddUsuario(usuario);
+            await _dataService.AddUsuarioAsync(usuario);
 
             var token = GenerateJwtToken(usuario);
             
